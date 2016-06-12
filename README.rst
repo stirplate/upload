@@ -14,7 +14,10 @@ Installation:
    your Stirplate User Credentials (please contact keith@stirplate.io to
    obtain these).
 -  Python 2.7.x (untested on Python >= 3).
--  ``pip install stirplate``
+-  ::
+
+      pip install stirplate
+      
 -  A ``stirplate`` executable will be added to your system path.
 
 
