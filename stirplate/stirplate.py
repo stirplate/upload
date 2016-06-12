@@ -195,7 +195,7 @@ def load_credentials():
 
 
 @command('rna')
-def deseq(protocol='tophat',
+def deseq(aligner='tophat',
           directory=None,
           project_name=None,
           project_description='',
@@ -204,7 +204,7 @@ def deseq(protocol='tophat',
     """
     Entry script for uploading RNA-seq data to Stirplate.io.
 
-    :param protocol: (Optional) Specify the aligner to use ('tophat' or 'star') [Default: tophat].
+    :param aligner: (Optional) Specify the aligner to use ('tophat' or 'star') [Default: tophat].
     :param directory: (Required) Input directory containing the sequencing data.
     :param project_name: (Required) Name of the project.
     :param project_description: (Optional) Description of the project.
@@ -292,7 +292,7 @@ def deseq(protocol='tophat',
           'user_id': stirplate_id,
           'project_name': project_name,
           'project_description': project_description,
-          'protocol': protocol,
+          'protocol': aligner,
           'species': species,
           'species_version': species_version,
           'ssprotocol': 'yes' if single_stranded_protocol else 'no',
