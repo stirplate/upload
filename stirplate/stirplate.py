@@ -195,7 +195,7 @@ def load_credentials():
 
 
 @command('rna')
-def deseq(aligner='tophat',
+def deseq(aligner=None,
           directory=None,
           project_name=None,
           project_description='',
@@ -243,6 +243,19 @@ def deseq(aligner='tophat',
         if not directory:
             directory = raw_input('Please enter the directory of the input sequencing data: ')
             assert os.path.exists(directory), 'Could not find the input directory: {}'.format(str(directory))
+
+        # Make sure there is a title to the project
+        # To specify a title, please run this script with
+        #    --aligner <TOPHAT_OR_STAR>
+        if not aligner:
+            sys.stdout.write('Please tell which aligner you would like to use:\n')
+            sys.stdout.write('  [1] TopHat\n')
+            sys.stdout.write('  [2] STAR\n')
+            aligner_selection = raw_input('Make selection [1-2]: ')
+            if aligner_selection == '1':
+                aligner = 'tophat'
+            elif aligner_selection == '2':
+                aligner = 'star'
 
         # Make sure there is a title to the project
         # To specify a title, please run this script with

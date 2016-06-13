@@ -17,7 +17,7 @@ Installation:
 -  ::
 
       pip install stirplate
-      
+
 -  A ``stirplate`` executable will be added to your system path.
 
 
@@ -66,7 +66,7 @@ RNA-Seq (DESeq2) protocol:
        --species SPECIES
 
 
-   -  Aliger choices are: ``tophat`` (default), and ``STAR``.
+   -  Aliger choices are: ``tophat`` (default), and ``star``.
    -  Species choices are: ``C_ELEGANS`` (worms), ``D_RERIO``
       (zebrafish), ``H_SAPIENS`` (humans), ``M_MUSCULUS`` (mouse),
       ``R_NORVEGICUS`` (rat), ``B_TAURUS`` (cow), ``C_FAMILIARIS`` (dog), or ``E_CABALLUS`` (horse).
