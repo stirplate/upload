@@ -39,6 +39,22 @@ import multiprocessing
 import shutil
 import datetime
 
+# Set the allowable file types
+VALID_FILE_TYLES = [
+    '.tar',
+    '.gz',
+    '.zip',
+    '.bz2',
+    '.gzip',
+    '.gz',
+    '.fastq',
+    '.fastq.txt',
+    '.fastq.txt.gz',
+    '.fq',
+    '.qseq',
+    '.qseq.txt'
+]
+
 # Import the required boto3 dependency.
 #   Exit if it is not installed.
 try:
@@ -113,6 +129,8 @@ def upload_data(transfer, directory=None, bucket=None):
     for root, dirs, files in os.walk(directory):
         for f in [x for x in files if not x.startswith('.')]:
             path = os.path.join(root, f)
+            if os.path.splitext(f)[-1] not in VALID_FILE_TYLES:
+                sys.stderr.write('[WARNING]: Skipping non data file: {}\n'.format(path))
 
             try:
                 # Upload! Progress will ne displayed to the STDOUT via ProgressPercentage()
