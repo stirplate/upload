@@ -131,6 +131,7 @@ def upload_data(transfer, directory=None, bucket=None):
             path = os.path.join(root, f)
             if os.path.splitext(f)[-1] not in VALID_FILE_TYLES:
                 sys.stderr.write('[WARNING]: Skipping non data file: {}\n'.format(path))
+                continue
 
             try:
                 # Upload! Progress will ne displayed to the STDOUT via ProgressPercentage()
