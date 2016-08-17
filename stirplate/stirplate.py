@@ -348,6 +348,125 @@ def deseq(aligner=None,
                           'when the file processing has completed and analysis processing is ready to begin.\n'))
 
 
+@command('dna')
+def variant_calling(directory=None,
+                    interval_file=None,
+                    project_name=None,
+                    project_description='',
+                    species=None):
+    """
+    Entry script for uploading DNA-seq data to Stirplate.io.
+
+    :param directory: (Required) Input directory containing the sequencing data.
+    :param interval_file: (Required) Path to an interval file.
+    :param project_name: (Required) Name of the project.
+    :param project_description: (Optional) Description of the project.
+    :param species: (Required) Model species.
+    """
+
+    # Set the codes base path
+    basepath = os.path.dirname(os.path.realpath(__file__))
+
+    # Load the credentials if they are not supplied
+    try:
+        stirplate_id, stirplate_access_key, stirplate_access_secret, stirplate_location = load_credentials()
+        sys.stdout.write('Stirplate user id: {}\n'.format(stirplate_id))
+        sys.stdout.write('Stirplate access key: {}\n'.format(stirplate_access_key))
+        sys.stdout.write('Stirplate access secret: {}\n'.format(
+            stirplate_access_secret[-8:].rjust(len(stirplate_access_secret), "*"))
+        )
+        sys.stdout.write('Stirplate data location: {}\n\n'.format(stirplate_location))
+    except EnvironmentError:
+        sys.stderr.write('[ERROR]: Try re-configuring your connection using:\n')
+        sys.stderr.write('[ERROR]:   python stirplate.py configure\n')
+        sys.stderr.write('[ERROR]:      or\n')
+        sys.stderr.write('[ERROR]:   python stirplate.py configure --install /path/to/stirplate/credentials.json\n\n')
+        sys.exit(1)
+
+    # Load the species data
+    with open(os.path.join(basepath, 'species', 'dna.json'), 'r') as f_h:
+        species_data = OrderedDict(sorted(json.load(f_h).items(), key=lambda x: x[1], reverse=True))
+
+    try:
+        # Make sure we know where the files are located.
+        # Note: This will search recursively, so the 'directory' only needs to be a parent folder.
+        # To specify a specific species version, please run this script with
+        #    --directory <PATH_TO_DATA>
+        if not directory:
+            directory = raw_input('Please enter the directory of the input sequencing data: ')
+            assert os.path.exists(directory), 'Could not find the input directory: {}'.format(str(directory))
+
+        # Make sure there is a title to the project
+        # To specify a title, please run this script with
+        #    --project_name <PROJECT_NAME>
+        if project_name is None:
+            project_name = 'RNA-Seq {}'.format(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+
+        # Interactively gets the users specie choice and sets the DEFAULT version.
+        # To specify a specific species version, please run this script with
+        #    --species <SPECIES>
+        #    --species_version <SPECIES_VERSION>
+        if species is None:
+            # Print out the species choices
+            sys.stdout.write('Please tell us what species your data is from (More available upon request):\n')
+            for idx, sp in enumerate(species_data.keys()):
+                sys.stdout.write('  [{}] {}\n'.format(idx + 1, sp))
+
+            # Gets the species choice from the user
+            species_selection = raw_input('Make selection [1-{}]: '.format(len(species_data)))
+            species, species_version = species_data.items()[int(species_selection) - 1]
+        else:
+            try:
+                species_version = species_data[species]
+            except KeyError, species_error:
+                sys.stderr.write('[ERROR]: Invalid species specfied: {}\n'.format(species_error.message))
+                sys.stderr.write('[ERROR]: Please choose from: {}\n'.format(', '.join(species_data.keys())))
+                sys.exit(1)
+
+    except (AssertionError, KeyError) as err:
+        sys.exit('[ERROR]: {}'.format(err.message))
+
+    # Establish the connection to AWS, and set the transfer
+    # configuration to optimize speed.
+    client = boto3.client('s3', aws_access_key_id=stirplate_access_key, aws_secret_access_key=stirplate_access_secret)
+    config = TransferConfig(
+        multipart_threshold=8 * 1024 * 1024,
+        max_concurrency=multiprocessing.cpu_count(),
+        num_download_attempts=10,
+    )
+    transfer = S3Transfer(client, config)
+
+    # Upload the input data
+    uploaded = upload_data(transfer, directory=directory, bucket=stirplate_location)
+
+    # Build the metadata file
+    meta = {
+          'user_id': stirplate_id,
+          'project_name': project_name,
+          'project_description': project_description,
+          'species': species,
+          'species_version': species_version,
+          'input_files': uploaded,
+          'interval_file': interval_file
+    }
+
+    # Build the metadata file (which will subsequently trigger the Stirplate processing to start)
+    t = tempfile.NamedTemporaryFile(suffix='.json')
+    with open(t.name, 'w') as w_h:
+        json.dump(meta, w_h)
+
+    # Upload the meta data
+    try:
+        transfer.upload_file(t.name, stirplate_location, os.path.basename(t.name))
+    except exceptions.ClientError, e:
+        sys.stderr.write('[ERROR]: {}\n'.format(e.message))
+        sys.stderr.write('[ERROR]: Try re-configuring your connection using: python stirplate.py congifure\n')
+    else:
+        # Uploading process has completed for RNA-seq pipeline
+        sys.stdout.write(('\nStirplate Processing has begun. You and your collaborators will receive an email '
+                          'when the file processing has completed and analysis processing is ready to begin.\n'))
+
+
 @command('gbs')
 def gbs(directory=None,
         barcode_key=None,
