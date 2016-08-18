@@ -396,6 +396,12 @@ def variant_calling(directory=None,
             directory = raw_input('Please enter the directory of the input sequencing data: ')
             assert os.path.exists(directory), 'Could not find the input directory: {}'.format(str(directory))
 
+        # Make sure the interval key file exists
+        if not interval_file:
+            interval_file = raw_input('Please enter the full path to the input interval file: ')
+            assert os.path.exists(interval_file), 'Could not find the input interval key file: {}'.format(
+                str(interval_file))
+
         # Make sure there is a title to the project
         # To specify a title, please run this script with
         #    --project_name <PROJECT_NAME>
@@ -439,15 +445,22 @@ def variant_calling(directory=None,
     # Upload the input data
     uploaded = upload_data(transfer, directory=directory, bucket=stirplate_location)
 
+    # Upload the ancillary file
+    ancillary = upload_ancillary(transfer, ancillary_files=[interval_file], bucket=stirplate_location)
+
+    # Set the protocol
+    protocol = 'dna'
+
     # Build the metadata file
     meta = {
           'user_id': stirplate_id,
           'project_name': project_name,
           'project_description': project_description,
           'species': species,
+          'protocol': protocol,
           'species_version': species_version,
           'input_files': uploaded,
-          'interval_file': interval_file
+          'ancillary_files': ancillary
     }
 
     # Build the metadata file (which will subsequently trigger the Stirplate processing to start)

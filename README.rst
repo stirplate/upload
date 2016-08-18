@@ -78,10 +78,45 @@ RNA-Seq (DESeq2) protocol:
       time. **Processing will begin at Stirplate as soon as the last
       file transfer has completed**.
 
+DNA-Seq protocol:
+------------------------------------------------------
+
+There are two ways to run the data upload helper for the Stirplate
+RNA-Seq (DESeq2) protocol:
+
+1. **Interactive**. Simply type:
+
+   ::
+
+      stirplate dna
+
+   -  You will be prompted for the input directory containing your
+      sequencing data, as well as additional meta data (aligner [TopHat, STAR], species, single
+      stranded protocol) information.
+
+2. **Automatic**. Simply run:
+
+   ::
+
+       stirplate dna
+       --directory /path/to/input/sequencing/data/
+       --interval_file /path/to/input/sequencing/data/intervals.interval_list
+       --project_name MyProjectName
+       --species SPECIES
+
+
+   -  Species choices are currently:  ``H_SAPIENS`` (humans). More available on request. Email keith@stirplate.io.
+   -  Upon running, all files in your input sequence data ``directory``
+      will be uploaded to Stirplate.io. The uploading is optimized for
+      speed so your data will be transferred in the least amount of
+      time. **Processing will begin at Stirplate as soon as the last
+      file transfer has completed**.
+
 Help
 ----
 
 At any point you may get additional command line usage help by typing:
 
--  ``python stirplate.py -h``
--  ``python stirplate.py rna -h``
+-  ``stirplate -h``
+-  ``stirplate rna -h``
+-  ``stirplate dna -h``
