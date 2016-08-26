@@ -1,6 +1,9 @@
 Stirplate.io Data Upload Helper
 ===============================
 
+*Current version:* **v1.4.0**
+
+
 Sequencing data may be sent to Stirplate several ways.
 
 1. Manual data upload via `stirplate.io <https://stirplate.io>`__.
@@ -40,7 +43,7 @@ Configure your Stirplate Access Credentials.
       stirplate configure --install /path/to/stirplate/config
 
 RNA-Seq protocol:
-------------------------------------------------------
+-----------------
 
 There are two ways to run the data upload helper for the Stirplate
 RNA-Seq (DESeq2) protocol:
@@ -79,7 +82,7 @@ RNA-Seq (DESeq2) protocol:
       file transfer has completed**.
 
 DNA-Seq protocol:
-------------------------------------------------------
+-----------------
 
 There are two ways to run the data upload helper for the Stirplate
 RNA-Seq (DESeq2) protocol:
@@ -112,11 +115,54 @@ RNA-Seq (DESeq2) protocol:
       time. **Processing will begin at Stirplate as soon as the last
       file transfer has completed**.
 
-Help
-----
+Data Upload and Storage only protocol:
+--------------------------------------
 
+There are two ways to run the data upload helper for the Stirplate
+(sotrage only) protocol:
+
+1. **Interactive**. Simply type:
+
+   ::
+
+      stirplate storage
+
+   -  You will be prompted for the input directory containing your
+      sequencing data, as well as additional meta data (aligner [TopHat, STAR], species, single
+      stranded protocol) information.
+
+2. **Automatic**. Simply run:
+
+   ::
+
+       stirplate storage
+       --directory /path/to/input/sequencing/data/
+       --project_name MyProjectName
+
+   -  Upon running, all files in your input sequence data ``directory``
+      will be uploaded to Stirplate.io. The uploading is optimized for
+      speed so your data will be transferred in the least amount of
+      time. **Processing will begin at Stirplate as soon as the last
+      file transfer has completed**.
+
+Help
+====
+
+Troubleshooting install
+-----------------------
+
+If `pip install stirplate` gives you permissions error, you can install the package as either:
+
+   - Root user: `sudo pip install stirplate`
+   - Current user: `pip install --user stirplate`
+
+
+Troubleshooting usage
+---------------------
 At any point you may get additional command line usage help by typing:
 
 -  ``stirplate -h``
 -  ``stirplate rna -h``
 -  ``stirplate dna -h``
+
+Email keith@stirplate.io for any futher questions.
