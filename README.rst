@@ -128,8 +128,7 @@ There are two ways to run the data upload helper for the Stirplate
       stirplate storage
 
    -  You will be prompted for the input directory containing your
-      sequencing data, as well as additional meta data (aligner [TopHat, STAR], species, single
-      stranded protocol) information.
+      sequencing data.
 
 2. **Automatic**. Simply run:
 
