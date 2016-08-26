@@ -25,7 +25,7 @@ Installation:
 
 
 Configure Access:
------------------
+=================
 
 Configure your Stirplate Access Credentials.
 
@@ -43,7 +43,7 @@ Configure your Stirplate Access Credentials.
       stirplate configure --install /path/to/stirplate/config
 
 RNA-Seq protocol:
------------------
+=================
 
 There are two ways to run the data upload helper for the Stirplate
 RNA-Seq (DESeq2) protocol:
@@ -82,7 +82,7 @@ RNA-Seq (DESeq2) protocol:
       file transfer has completed**.
 
 DNA-Seq protocol:
------------------
+=================
 
 There are two ways to run the data upload helper for the Stirplate
 RNA-Seq (DESeq2) protocol:
@@ -116,7 +116,7 @@ RNA-Seq (DESeq2) protocol:
       file transfer has completed**.
 
 Data Upload and Storage only protocol:
---------------------------------------
+======================================
 
 There are two ways to run the data upload helper for the Stirplate
 (sotrage only) protocol:
