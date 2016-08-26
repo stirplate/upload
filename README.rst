@@ -152,8 +152,8 @@ Troubleshooting install
 
 If `pip install stirplate` gives you permissions error, you can install the package as either:
 
-   - Root user: `sudo pip install stirplate`
-   - Current user: `pip install --user stirplate`
+- Root user: `sudo pip install stirplate`
+- Current user: `pip install --user stirplate`
 
 
 Troubleshooting usage
